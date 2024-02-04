@@ -1,0 +1,33 @@
+version: '3'
+
+tasks:
+  init:
+    help: "init this packages dev depends"
+    cmds:
+      - poetry update
+      - poetry install
+      - poetry lock
+
+  lint:
+    help: "Lint this package"
+    cmds:
+      - pre-commit run --all-files --color always
+      - safety check --continue-on-error --full-report
+
+  test:
+    help: "Test this package"
+    cmds:
+      - coverage run
+      - coverage report
+      - coverage xml
+
+  docs_serve:
+    help: "open docs_ server"
+    cmds:
+      - poetry run mkdocs serve {{.CLI_ARGS}}
+
+  deploy_pages:
+    help: "deplot new docs pages"
+    cmds:
+      - poetry install
+      - poetry run mkdocs gh-deploy --remote-branch gh-pages
