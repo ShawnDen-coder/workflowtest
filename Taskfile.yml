@@ -30,4 +30,4 @@ tasks:
     help: "deplot new docs pages"
     cmds:
       - poetry install
-      - poetry run mkdocs gh-deploy --remote-branch gh-pages
+      - poetry run mkdocs gh-deploy --remote-branch gh-pages --force
