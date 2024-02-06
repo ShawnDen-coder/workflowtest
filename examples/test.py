@@ -1,6 +1,5 @@
 def example_fun():
-    """
-    hell word
+    """Hell word
     :return: none
     """
-    return None
+    return

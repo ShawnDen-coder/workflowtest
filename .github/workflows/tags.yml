@@ -1,0 +1,74 @@
+name: 'CI'
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  bump_version:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    name: "Bump version and create changelog with commitizen"
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - id: cz
+        name: Create bump and changelog
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          changelog: false
+
+      - name: Print Version
+        run: echo "Bumped to version ${{ steps.cz.outputs.version }}"
+
+  release:
+    needs: bump_version
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4 # checout 到对应的代码
+
+      - uses: actions/setup-python@v5 # 设置 python 环境
+        with: # 设置对应的参数
+          python-version: '3.10'
+      - run: python --version # check 一下 python 版本
+
+      - name: install pyinstaller # 使用 pip 安装 pyinstaller
+        run: |
+          pip install pyinstaller
+          pyinstaller --version
+      - name: build
+        run: pyinstaller sha256.py -F # 运行 build
+
+      - name: upload EXE File
+        uses: actions/upload-artifact@v4 # 这里是上传的action
+        with:
+          name: sha256-windows-exe # 压缩包文件名
+          path: dist/sha256.exe # build 后的路径
+
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v4
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          configuration: ".github/config/configuration.json"
+          ignorePreReleases: ${{ !contains(github.ref, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release
+        uses: mikepenz/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body: ${{steps.github_release.outputs.changelog}}
+          prerelease: ${{ contains(github.ref, '-rc') || contains(github.ref, '-b') || contains(github.ref, '-a') }}
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
