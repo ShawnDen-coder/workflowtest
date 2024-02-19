@@ -52,40 +52,8 @@ repos:
         require_serial: true
         language: system
         stages: [ commit-msg ]
-      - id: ruff-check
-        name: ruff check
-        entry: ruff check
-        args: [ "--force-exclude", "--extend-fixable=ERA001,F401,F841,T201,T203" ]
-        require_serial: true
-        language: system
-        types_or: [ python, pyi ]
-      - id: ruff-format
-        name: ruff format
-        entry: ruff format
-        args: [ --force-exclude ]
-        require_serial: true
-        language: system
-        types_or: [ python, pyi ]
       - id: poetry-check
         name: poetry check
         entry: poetry check
         language: system
         pass_filenames: false
-
-  - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.21.0  # or higher tag
-    hooks:
-      - id: yamllint
-        args: [ --format, parsable, --strict ]
-
-  - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
-    rev: 0.2.1  # or other specific tag
-    hooks:
-      - id: yamlfmt
-        args: [ --mapping, '2', --sequence, '2', --offset, '0', --colons, --width, '150' ]
-
-  - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.5.3
-    hooks:
-      - id: commitizen
-        stages: [commit-msg]

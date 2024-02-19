@@ -7,6 +7,8 @@ from pathlib import Path
 import mkdocs_gen_files
 
 project_name = "src/my_python_template"
+
+
 def main():
     nav = mkdocs_gen_files.Nav()
     root = Path(__file__).parent.parent
@@ -16,7 +18,11 @@ def main():
         doc_path = path.relative_to(root).with_suffix(".md")
         full_doc_path = Path("reference", doc_path)
         parts = list(module_path.parts)
-        if parts[-1] == "__init__" or parts[-1] == "__main__" or parts[-1] == "__version__":
+        if (
+            parts[-1] == "__init__"
+            or parts[-1] == "__main__"
+            or parts[-1] == "__version__"
+        ):
             continue
         nav_parts = list(parts)
         if nav_parts[-1].startswith("_"):
@@ -27,7 +33,9 @@ def main():
             ident = ".".join(parts)
             print("::: " + ident, file=fd)
 
-        mkdocs_gen_files.set_edit_path(full_doc_path, path.as_posix().replace("\\", "/"))
+        mkdocs_gen_files.set_edit_path(
+            full_doc_path, path.as_posix().replace("\\", "/")
+        )
 
     with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
         nav_file.writelines(nav.build_literate_nav())

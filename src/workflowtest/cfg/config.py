@@ -8,8 +8,8 @@ settings = Dynaconf(
     root_path=current_directory,
     environments=True,
     envvar_prefix="DYNACONF",
-    settings_files=['settings.yaml', '.secrets.yaml'],
-    load_dotenv=True
+    settings_files=["settings.yaml", ".secrets.yaml"],
+    load_dotenv=True,
 )
 
 # `envvar_prefix` = export envvars with `export DYNACONF_FOO=bar`.
