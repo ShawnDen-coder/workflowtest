@@ -31,7 +31,11 @@ class Examples:
         self._root = root
 
     def get_examples(self):
-        files = [file_ for file_ in self._root.glob("*.py") if "_psd_files.py" not in file_.as_posix()]
+        files = [
+            file_
+            for file_ in self._root.glob("*.py")
+            if "_psd_files.py" not in file_.as_posix()
+        ]
         return files
 
     @staticmethod
