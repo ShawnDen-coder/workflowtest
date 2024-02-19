@@ -35,10 +35,13 @@ jobs:
         run: task build
 
       - name: Configure TestPyPI
-        run: poetry config repositories.testpypi https://test.pypi.org/legacy/
+        run: poetry config repositories.test-pypi https://test.pypi.org/legacy/
 
-      - name: Publish package to TestPyPI
-        run: poetry publish -r testpypi -u __token__ -p ${{ secrets.TEST_PYPI_API_TOKEN }}
+      - name: Configure PyPI
+        run: poetry config pypi-token.test-pypi ${{ secrets.PYPI_API_TOKEN }}
+        
+      - name: Publish package to Test Pypi 
+        run: poetry publish -r test-pypi
 
       - name: Install package from TestPyPI
         run: pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple workflowtest
