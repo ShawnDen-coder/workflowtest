@@ -1,4 +1,4 @@
-"""Test workflowtest."""
+"Test workflowtest."
 
 from src import workflowtest
 
