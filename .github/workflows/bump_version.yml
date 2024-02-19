@@ -26,3 +26,10 @@ jobs:
 
       - name: Print Version
         run: echo "Bumped to version ${{ steps.cz.outputs.version }}"
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*.*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
