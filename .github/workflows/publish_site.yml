@@ -1,13 +1,13 @@
-name: publish site
+name: deploy docs
 
 on:
-  push:
-    branches:
-      - master
+  workflow_run:
+    workflows: [ bump_version ]
+    types: [ completed ]
+    branches: [ master ]
 
 jobs:
-  deploy:
-    # 创建一个 Ubuntu 容器
+  deploy_docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,7 +24,5 @@ jobs:
 
       - name: install poetry
         uses: abatilo/actions-poetry@v2
-
-      - run: poetry --version
 
       - run: task deploy_pages

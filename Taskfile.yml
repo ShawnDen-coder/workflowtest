@@ -4,7 +4,6 @@ tasks:
   init:
     desc: "init this packages dev depends"
     cmds:
-      - poetry update
       - poetry install
       - poetry lock
 
@@ -17,9 +16,9 @@ tasks:
   test:
     desc: "Test this package"
     cmds:
-      - coverage run
-      - coverage report
-      - coverage xml
+      - poetry run coverage run
+      - poetry run coverage report
+      - poetry run coverage xml
 
   docs_serve:
     desc: "open docs_ server"
