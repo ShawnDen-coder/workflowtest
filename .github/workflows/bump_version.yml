@@ -1,6 +1,10 @@
-name: 'test'
+name: bump_version
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: [ CI ]
+    types: [ completed ]
+    branches: [ master ]
 
 jobs:
   bump_version:

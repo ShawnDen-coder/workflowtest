@@ -1,5 +1,7 @@
 name: CI
 on:
+  push:
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -25,26 +27,26 @@ jobs:
       - name: setup poetry
         uses: abatilo/actions-poetry@v2
 
-      - name: View poetry --help
-        run: poetry --help
-
       - name: Install dependencies
         run: task init
 
-      - name: build
-        run: task build
+      - name: run test
+        run: task test
 
-      - name: Configure TestPyPI
-        run: poetry config repositories.test-pypi https://test.pypi.org/legacy/
-
-      - name: Configure PyPI
-        run: poetry config pypi-token.test-pypi ${{ secrets.TEST_PYPI_API_TOKEN }}
-        
-      - name: Publish package to Test Pypi 
-        run: poetry publish -r test-pypi
-
-      - name: Install package from TestPyPI
-        run: pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple workflowtest
+#      - name: build
+#        run: task build
+#
+#      - name: Configure TestPyPI
+#        run: poetry config repositories.test-pypi https://test.pypi.org/legacy/
+#
+#      - name: Configure PyPI
+#        run: poetry config pypi-token.test-pypi ${{ secrets.TEST_PYPI_API_TOKEN }}
+#
+#      - name: Publish package to Test Pypi
+#        run: poetry publish -r test-pypi
+#
+#      - name: Install package from TestPyPI
+#        run: pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple workflowtest
 
 #      - name: Publish package to PyPI
 #        run: poetry publish -u __token__ -p ${{ secrets.PYPI_API_TOKEN }}
